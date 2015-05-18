@@ -19,7 +19,13 @@ Event publishing is straightforward using the macro PUBLISH(). This allows you t
 
 To publish an event, create an instance of the event you wish to publish (for example: EventProgressUpdated) and use the macro PUBLISH() as follows:
 
-	PUBLISH(event);
+```objc
+PUBLISH(event);
+```
+
+```swift
+Tolo.publish(event)
+```
 
 where event is an instance of the event (for example: EventProgressUpdated *event = ...).
 
@@ -27,14 +33,29 @@ where event is an instance of the event (for example: EventProgressUpdated *even
 
 Subscription is the complement to event publishing—-it lets you receive notification that an event has occurred. To subscribe to an event, use the macro SUBSCRIBE() passing in the event type you wish to subscribe to as follows:
 
-	SUBSCRIBE(EventProgressUpdated)
- 	{
- 		// use the variable event -- for example: self.progressView.progress = event.progress
- 	}
+```objc
+SUBSCRIBE(EventProgressUpdated)
+{
+	// use the variable event -- for example: self.progressView.progress = event.progress
+}
+```
+
+```swift
+func onEventProgressUpdated(event: EventProgressUpdated)
+{
+	// use the variable event -- for example: self.progressView.progress = event.progress
+}
+```
 
 In order to receive events, a class instance needs to register with Tolo. To register, simply use the macro REGISTER() passing in an instance of the class:
 
-	REGISTER(self);
+```objc
+REGISTER(self);
+```
+
+```swift
+Tolo.register(self)
+```
 
 ### PRODUCING
 
@@ -50,7 +71,13 @@ To create a producer, use the macro PUBLISHER():
 
 Producers, like subscribers, must also be registered:
 
-	REGISTER(self);
+```objc
+REGISTER(self);
+```
+
+```swift
+Tolo.register(self)
+```
 
 When registering, the producer method will be called only once for any number of subscriber previously registered for the same type. However, the producer method will also be called once for each new method that subscribes to an event of the same type.
 
