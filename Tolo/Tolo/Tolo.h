@@ -49,16 +49,12 @@
 
 #define PUBLISHER(_event_type_) - (_event_type_ *) get##_event_type_
 
-#define REGISTER() [Tolo.sharedInstance subscribe:self]
+#define REGISTER() [ToloCore.sharedInstance subscribe:self]
 
-#define UNREGISTER() [Tolo.sharedInstance unsubscribe:self]
+#define UNREGISTER() [ToloCore.sharedInstance unsubscribe:self]
 
-#define PUBLISH(_value_) [Tolo.sharedInstance publish:_value_]
+#define PUBLISH(_value_) [ToloCore.sharedInstance publish:_value_]
 
 #import "ToloCore.h"
-
-@interface Tolo : ToloCore
-
-@end
 
 #endif

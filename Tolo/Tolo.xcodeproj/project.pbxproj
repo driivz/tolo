@@ -7,25 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FE2A0C031B09E22200398E99 /* SwiftTolo.h in Headers */ = {isa = PBXBuildFile; fileRef = FE2A0C021B09E22200398E99 /* SwiftTolo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FEBFD3411B09B9EC0057A494 /* ToloSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBFD31B1B09B9490057A494 /* ToloSwift.swift */; };
 		FEBFD34A1B09BD130057A494 /* ToloCore.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBFD3481B09BD130057A494 /* ToloCore.m */; };
-		FEBFD3531B09D37C0057A494 /* ToloKit.h in Headers */ = {isa = PBXBuildFile; fileRef = FEBFD3281B09B99D0057A494 /* ToloKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FEBFD3551B09D4210057A494 /* ToloCore.h in Headers */ = {isa = PBXBuildFile; fileRef = FEBFD3471B09BD130057A494 /* ToloCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FEBFD3561B09D4250057A494 /* Tolo.h in Headers */ = {isa = PBXBuildFile; fileRef = FEBFD3541B09D3D90057A494 /* Tolo.h */; };
-		FEBFD3581B09D4700057A494 /* Tolo.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBFD3571B09D4700057A494 /* Tolo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		CBAE902317C81AA100912D16 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CBAE902717C81AA100912D16 /* Tolo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tolo-Prefix.pch"; sourceTree = "<group>"; };
+		FE2A0C021B09E22200398E99 /* SwiftTolo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SwiftTolo.h; path = SwiftTolo/SwiftTolo.h; sourceTree = SOURCE_ROOT; };
 		FEBFD31B1B09B9490057A494 /* ToloSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToloSwift.swift; sourceTree = "<group>"; };
-		FEBFD3241B09B99D0057A494 /* ToloKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ToloKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FEBFD3241B09B99D0057A494 /* SwiftTolo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftTolo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEBFD3271B09B99D0057A494 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FEBFD3281B09B99D0057A494 /* ToloKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ToloKit.h; path = ToloKit/ToloKit.h; sourceTree = SOURCE_ROOT; };
 		FEBFD3471B09BD130057A494 /* ToloCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToloCore.h; sourceTree = "<group>"; };
 		FEBFD3481B09BD130057A494 /* ToloCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToloCore.m; sourceTree = "<group>"; };
 		FEBFD3541B09D3D90057A494 /* Tolo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tolo.h; sourceTree = "<group>"; };
-		FEBFD3571B09D4700057A494 /* Tolo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tolo.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -33,7 +31,7 @@
 			isa = PBXGroup;
 			children = (
 				CBAE902517C81AA100912D16 /* Tolo */,
-				FEBFD3251B09B99D0057A494 /* ToloKit */,
+				FEBFD3251B09B99D0057A494 /* SwiftTolo */,
 				CBAE902217C81AA100912D16 /* Frameworks */,
 				CBAE902117C81AA100912D16 /* Products */,
 			);
@@ -42,7 +40,7 @@
 		CBAE902117C81AA100912D16 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FEBFD3241B09B99D0057A494 /* ToloKit.framework */,
+				FEBFD3241B09B99D0057A494 /* SwiftTolo.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -58,9 +56,8 @@
 		CBAE902517C81AA100912D16 /* Tolo */ = {
 			isa = PBXGroup;
 			children = (
+				FE2A0C021B09E22200398E99 /* SwiftTolo.h */,
 				FEBFD3541B09D3D90057A494 /* Tolo.h */,
-				FEBFD3571B09D4700057A494 /* Tolo.m */,
-				FEBFD3281B09B99D0057A494 /* ToloKit.h */,
 				FEBFD3471B09BD130057A494 /* ToloCore.h */,
 				FEBFD3481B09BD130057A494 /* ToloCore.m */,
 				FEBFD31B1B09B9490057A494 /* ToloSwift.swift */,
@@ -77,12 +74,12 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		FEBFD3251B09B99D0057A494 /* ToloKit */ = {
+		FEBFD3251B09B99D0057A494 /* SwiftTolo */ = {
 			isa = PBXGroup;
 			children = (
 				FEBFD3261B09B99D0057A494 /* Supporting Files */,
 			);
-			path = ToloKit;
+			path = SwiftTolo;
 			sourceTree = "<group>";
 		};
 		FEBFD3261B09B99D0057A494 /* Supporting Files */ = {
@@ -100,8 +97,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FEBFD3531B09D37C0057A494 /* ToloKit.h in Headers */,
 				FEBFD3551B09D4210057A494 /* ToloCore.h in Headers */,
+				FE2A0C031B09E22200398E99 /* SwiftTolo.h in Headers */,
 				FEBFD3561B09D4250057A494 /* Tolo.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -109,9 +106,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		FEBFD3231B09B99D0057A494 /* ToloKit */ = {
+		FEBFD3231B09B99D0057A494 /* SwiftTolo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FEBFD3371B09B99D0057A494 /* Build configuration list for PBXNativeTarget "ToloKit" */;
+			buildConfigurationList = FEBFD3371B09B99D0057A494 /* Build configuration list for PBXNativeTarget "SwiftTolo" */;
 			buildPhases = (
 				FEBFD34F1B09D1770057A494 /* Headers */,
 				FEBFD31F1B09B99D0057A494 /* Sources */,
@@ -120,9 +117,9 @@
 			);
 			dependencies = (
 			);
-			name = ToloKit;
+			name = SwiftTolo;
 			productName = ToloKit;
-			productReference = FEBFD3241B09B99D0057A494 /* ToloKit.framework */;
+			productReference = FEBFD3241B09B99D0057A494 /* SwiftTolo.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -151,7 +148,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				FEBFD3231B09B99D0057A494 /* ToloKit */,
+				FEBFD3231B09B99D0057A494 /* SwiftTolo */,
 			);
 		};
 /* End PBXProject section */
@@ -161,7 +158,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FEBFD3581B09D4700057A494 /* Tolo.m in Sources */,
 				FEBFD34A1B09BD130057A494 /* ToloCore.m in Sources */,
 				FEBFD3411B09B9EC0057A494 /* ToloSwift.swift in Sources */,
 			);
@@ -248,7 +244,7 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				INFOPLIST_FILE = ToloKit/Info.plist;
+				INFOPLIST_FILE = SwiftTolo/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -284,7 +280,7 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				INFOPLIST_FILE = ToloKit/Info.plist;
+				INFOPLIST_FILE = SwiftTolo/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -309,13 +305,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FEBFD3371B09B99D0057A494 /* Build configuration list for PBXNativeTarget "ToloKit" */ = {
+		FEBFD3371B09B99D0057A494 /* Build configuration list for PBXNativeTarget "SwiftTolo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FEBFD3381B09B99D0057A494 /* Debug */,
 				FEBFD3391B09B99D0057A494 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

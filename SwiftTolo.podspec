@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name         = "tolo"
+  s.name         = "SwiftTolo"
   s.version      = "1.1.0"
   s.summary      = "A event publish/sibscribe framework for iOS."
   s.description  = "Tolo is an event publish/subscribe framework inspired by Otto and designed to decouple different parts of your iOS application while still allowing them to communicate efficiently. Traditional ways of subscribing for and triggering notifications are both cumbersome and error prone with minimal compile time error checking."
@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = { "Ephraim Tekle" => "genzeb@gmail.com" }
   s.platform     = :ios, "8.0"
-  s.source       = { :git => "https://github.com/kswchoo/tolo.git", :tag => "v1.1.0" }
+  s.source       = { :git => "https://github.com/kswchoo/tolo.git", :tag => "v1.1.0-swift" }
   s.source_files = "Tolo/Tolo/*.{h,m,swift}"
   s.requires_arc = true
 end
