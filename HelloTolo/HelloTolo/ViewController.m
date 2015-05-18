@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "ProgressSubscriberView.h"
 #import "ProgressGenerator.h"
+#import "HelloTolo-Swift.h"
 
 @interface ViewController ()
 @property(nonatomic,strong) IBOutlet UITextField *textField;
@@ -65,6 +66,17 @@ SUBSCRIBE(EventValueChanged)
     
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.subviews.count*kHeight);
     
+}
+
+- (IBAction)addSwiftProgressSubscriber:(id)sender {
+    static CGFloat kHeight = 35;
+    SwiftProgressSubscriberView *view = [[SwiftProgressSubscriberView alloc] initWithFrame:CGRectMake(0,
+                                                                                                      self.scrollView.subviews.count*kHeight,
+                                                                                                      self.scrollView.frame.size.width,
+                                                                                                      kHeight)];
+    [self.scrollView addSubview:view];
+    
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.subviews.count*kHeight);
 }
 
 - (IBAction)removeProgressSubscribers:(id)sender
