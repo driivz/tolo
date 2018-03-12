@@ -71,6 +71,8 @@
 
 #define REGISTER() [Tolo.sharedInstance subscribe:self]
 
+#define REGISTER_WITH_PARENTS_SUBSCRIPTIONS() [Tolo.sharedInstance subscribe:self withParentsSubscriptions:YES]
+
 #define UNREGISTER() [Tolo.sharedInstance unsubscribe:self]
 
 #define PUBLISH(_value_) [Tolo.sharedInstance publish:_value_]
@@ -83,6 +85,7 @@
 @property (nonatomic,strong) NSString *observerPrefix;
 
 - (void) subscribe:(NSObject *)object;
+- (void) subscribe:(NSObject *)object withParentsSubscriptions:(BOOL)parentsSubscriptions;
 - (void) unsubscribe:(NSObject *)object;
 - (void) publish:(id<NSObject>)type;
 

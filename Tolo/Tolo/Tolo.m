@@ -46,11 +46,11 @@
 @end
 
 @interface NSObject (PubSub)
-- (NSDictionary *)tolo_selectorsWithPrefix:(NSString *)prefix withParam:(BOOL)hasParam;
+- (NSDictionary *)tolo_selectorsWithPrefix:(NSString *)prefix withParam:(BOOL)hasParam includesParentSelectors:(BOOL)includes;
 @end
 @implementation NSObject (PubSub)
 
-- (NSDictionary *)tolo_selectorsWithPrefix:(NSString *)prefix withParam:(BOOL)hasParam
+- (NSDictionary *)tolo_selectorsWithPrefix:(NSString *)prefix withParam:(BOOL)hasParam includesParentSelectors:(BOOL)includes;
 {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     
@@ -59,36 +59,44 @@
     
     u_int count;
     
-    Method* methods = class_copyMethodList([self class], &count);
+    Class objectClass = [self class];
     
-    for (int i = 0; i < count ; i++) {
-        
-        Method method = methods[i];
-        
-        const char *encoding = method_getTypeEncoding(method);
-        NSMethodSignature *signature = [NSMethodSignature signatureWithObjCTypes:encoding];
-        NSUInteger parameterCount = [signature numberOfArguments];
-        
-        if (parameterCount - INDEX_FIRST_PARAM != numberOfParams) {
-            continue;
+    do {
+        Method* methods = class_copyMethodList(objectClass, &count);
+        for (int i = 0; i < count ; i++) {
+
+            Method method = methods[i];
+
+            const char *encoding = method_getTypeEncoding(method);
+            NSMethodSignature *signature = [NSMethodSignature signatureWithObjCTypes:encoding];
+            NSUInteger parameterCount = [signature numberOfArguments];
+
+            if (parameterCount - INDEX_FIRST_PARAM != numberOfParams) {
+                continue;
+            }
+
+            SEL selector = method_getName(method);
+            const char* methodName = sel_getName(selector);
+            NSString *methodNameString = [NSString stringWithCString:methodName encoding:NSUTF8StringEncoding];
+
+            if (![methodNameString hasPrefix:prefix]) {
+                continue;
+            }
+
+            NSRange range = {prefix.length, methodNameString.length - prefix.length - (hasParam?1:0)};
+
+            NSString *paramTypeNameString = [methodNameString substringWithRange:range];
+
+            [result setObject:methodNameString forKey:paramTypeNameString];
+
         }
-        
-        SEL selector = method_getName(method);
-        const char* methodName = sel_getName(selector);
-        NSString *methodNameString = [NSString stringWithCString:methodName encoding:NSUTF8StringEncoding];
-        
-        if (![methodNameString hasPrefix:prefix]) {
-            continue;
-        }
-        
-        NSRange range = {prefix.length, methodNameString.length - prefix.length - (hasParam?1:0)};
-        
-        NSString *paramTypeNameString = [methodNameString substringWithRange:range];
-        
-        [result setObject:methodNameString forKey:paramTypeNameString];
-        
-    }
-    free(methods);
+        free(methods);
+
+        objectClass = [objectClass superclass];
+    } while (includes &&
+             [objectClass isSubclassOfClass:[NSObject class]] &&
+             objectClass != [NSObject class]);
+
     return result;
 }
 @end
@@ -122,6 +130,11 @@
 
 - (void) subscribe:(NSObject *)object
 {
+    [self subscribe:object withParentsSubscriptions:NO];
+}
+
+- (void) subscribe:(NSObject *)object withParentsSubscriptions:(BOOL)parentsSubscriptions
+{
     // Unsubscribe the `object` to prevent multiple-subscriptions
     [self unsubscribe:object];
     
@@ -131,7 +144,7 @@
         self.publishers = [NSMutableDictionary dictionary];
     }
     
-    NSDictionary *publishingObjects = [object tolo_selectorsWithPrefix:self.publisherPrefix withParam:NO];
+    NSDictionary *publishingObjects = [object tolo_selectorsWithPrefix:self.publisherPrefix withParam:NO includesParentSelectors:parentsSubscriptions];
     
     if (publishingObjects.count) {
         
@@ -141,9 +154,11 @@
             
             [self.publishers setObject:[Subscriber subscriberWithObject:object selector:selector]
                                 forKey:type];
-            
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             // publish to existing subscribers
             [self publish:[object performSelector:selector]];
+#pragma clang diagnostic pop
         }
     }
     
@@ -152,7 +167,7 @@
     if (!self.observers) {
         self.observers = [NSMutableDictionary dictionary];
     }
-    NSDictionary *observedObjects = [object tolo_selectorsWithPrefix:self.observerPrefix withParam:YES];
+    NSDictionary *observedObjects = [object tolo_selectorsWithPrefix:self.observerPrefix withParam:YES includesParentSelectors:parentsSubscriptions];
     
     if (observedObjects.count) {
         
@@ -172,7 +187,10 @@
             // publish this type to the subscriber on subscribe
             Subscriber *pub = [self.publishers objectForKey:type];
             if (pub) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 [object performSelector:selector withObject:[pub.target performSelector:pub.selector]];
+#pragma clang diagnostic pop
             }
         }
     }
@@ -223,7 +241,10 @@
                 [observers removeObject:subscriber];
             
             } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 [subscriber.target performSelector:subscriber.selector withObject:type];
+#pragma clang diagnostic pop
             }
         }
     }
