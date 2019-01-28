@@ -79,10 +79,10 @@
 
 @interface Tolo : NSObject
 
-@property(nonatomic) BOOL forceMainThread;
+@property (nonatomic, assign) BOOL forceMainThread;
 
-@property (nonatomic,strong) NSString *publisherPrefix;
-@property (nonatomic,strong) NSString *observerPrefix;
+@property (nonatomic, strong) NSString *publisherPrefix;
+@property (nonatomic, strong) NSString *observerPrefix;
 
 - (void) subscribe:(NSObject *)object;
 - (void) subscribe:(NSObject *)object withParentsSubscriptions:(BOOL)parentsSubscriptions;

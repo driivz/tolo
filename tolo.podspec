@@ -6,11 +6,11 @@ Pod::Spec.new do |s|
   s.homepage     = "http://genzeb.github.io/tolo/"
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = { "Ephraim Tekle" => "genzeb@gmail.com" }
-  s.ios.deployment_target = "5.0"
+  s.ios.deployment_target = "10.3"
   s.watchos.deployment_target = "2.0"
-  s.tvos.deployment_target = "9.0"
+  s.tvos.deployment_target = "10.3"
   s.osx.deployment_target = "10.9"
-  s.source       = { :git => "https://github.com/kswchoo/tolo.git", :tag => "v1.0.3" }
+  s.source       = { :git => "https://github.com/kswchoo/tolo.git", :tag => s.versions.to_s }
   s.source_files = "Tolo/Tolo/*.{h,m}"
   s.requires_arc = true
 end

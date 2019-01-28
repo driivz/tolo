@@ -30,8 +30,8 @@
 #import <objc/runtime.h>
 
 @interface Subscriber : NSObject
-@property(nonatomic) SEL selector;
-@property(nonatomic,weak) id target;
+@property (nonatomic) SEL selector;
+@property (nonatomic, weak) id target;
 + (Subscriber *)subscriberWithObject:(id)subscriber selector:(SEL)selector;
 @end
 @implementation Subscriber
@@ -102,8 +102,8 @@
 @end
 
 @interface Tolo ()
-@property (nonatomic,strong) NSMutableDictionary *observers;
-@property (nonatomic,strong) NSMutableDictionary *publishers;
+@property (atomic, strong) NSMutableDictionary *observers;
+@property (atomic, strong) NSMutableDictionary *publishers;
 @end
 
 @implementation Tolo
@@ -154,11 +154,8 @@
             
             [self.publishers setObject:[Subscriber subscriberWithObject:object selector:selector]
                                 forKey:type];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             // publish to existing subscribers
             [self publish:[object performSelector:selector]];
-#pragma clang diagnostic pop
         }
     }
     
@@ -187,10 +184,7 @@
             // publish this type to the subscriber on subscribe
             Subscriber *pub = [self.publishers objectForKey:type];
             if (pub) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 [object performSelector:selector withObject:[pub.target performSelector:pub.selector]];
-#pragma clang diagnostic pop
             }
         }
     }
@@ -241,10 +235,7 @@
                 [observers removeObject:subscriber];
             
             } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 [subscriber.target performSelector:subscriber.selector withObject:type];
-#pragma clang diagnostic pop
             }
         }
     }
