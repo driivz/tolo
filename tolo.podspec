@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.watchos.deployment_target = "2.0"
   s.tvos.deployment_target = "10.3"
   s.osx.deployment_target = "10.9"
-  s.source       = { :git => "https://github.com/kswchoo/tolo.git", :tag => s.versions.to_s }
+  s.source       = { :git => "https://github.com/kswchoo/tolo.git", :tag => s.version.to_s }
   s.source_files = "Tolo/Tolo/*.{h,m}"
   s.requires_arc = true
 end
