@@ -11,11 +11,11 @@
 #import "ProgressGenerator.h"
 
 @interface ViewController ()
-@property(nonatomic,strong) IBOutlet UITextField *textField;
-@property(nonatomic,strong) IBOutlet UILabel *label;
-@property(nonatomic,strong) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, weak) IBOutlet UITextField *textField;
+@property (nonatomic, weak) IBOutlet UILabel *label;
+@property (nonatomic, weak) IBOutlet UIScrollView *scrollView;
 
-@property(nonatomic,strong) ProgressGenerator *progressGenerator;
+@property (nonatomic, strong) ProgressGenerator *progressGenerator;
 @end
 
 @implementation ViewController
@@ -64,7 +64,6 @@ SUBSCRIBE(EventValueChanged)
     [self.scrollView addSubview:view];
     
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.subviews.count*kHeight);
-    
 }
 
 - (IBAction)removeProgressSubscribers:(id)sender
@@ -72,7 +71,6 @@ SUBSCRIBE(EventValueChanged)
     for (UIView *view in self.scrollView.subviews) {
         [view removeFromSuperview];
     }
-    
 }
 
 - (IBAction)hideKeyboardIfShown:(id)sender

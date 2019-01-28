@@ -37,9 +37,7 @@ PUBLISHER(EventProgressUpdated)
 
 - (void) somethingTriggersProgressUpdateInReallifeApplication
 {
-    
     PUBLISH([self getEventProgressUpdated]);
-    
 }
 
 @end
