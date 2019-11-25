@@ -10,7 +10,6 @@
 		CBAE8FD717C808F100912D16 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBAE8FD617C808F100912D16 /* UIKit.framework */; };
 		CBAE8FD917C808F100912D16 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBAE8FD817C808F100912D16 /* Foundation.framework */; };
 		CBAE8FDB17C808F100912D16 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBAE8FDA17C808F100912D16 /* CoreGraphics.framework */; };
-		CBAE8FE117C808F100912D16 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBAE8FDF17C808F100912D16 /* InfoPlist.strings */; };
 		CBAE8FE317C808F100912D16 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CBAE8FE217C808F100912D16 /* main.m */; };
 		CBAE8FE717C808F100912D16 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CBAE8FE617C808F100912D16 /* AppDelegate.m */; };
 		CBAE8FE917C808F100912D16 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = CBAE8FE817C808F100912D16 /* Default.png */; };
@@ -47,7 +46,6 @@
 		CBAE8FD817C808F100912D16 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CBAE8FDA17C808F100912D16 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		CBAE8FDE17C808F100912D16 /* HelloTolo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HelloTolo-Info.plist"; sourceTree = "<group>"; };
-		CBAE8FE017C808F100912D16 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CBAE8FE217C808F100912D16 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CBAE8FE417C808F100912D16 /* HelloTolo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HelloTolo-Prefix.pch"; sourceTree = "<group>"; };
 		CBAE8FE517C808F100912D16 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -123,7 +121,6 @@
 			isa = PBXGroup;
 			children = (
 				CBAE8FDE17C808F100912D16 /* HelloTolo-Info.plist */,
-				CBAE8FDF17C808F100912D16 /* InfoPlist.strings */,
 				CBAE8FE217C808F100912D16 /* main.m */,
 				CBAE8FE417C808F100912D16 /* HelloTolo-Prefix.pch */,
 				CBAE8FE817C808F100912D16 /* Default.png */,
@@ -228,7 +225,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CBAE8FE117C808F100912D16 /* InfoPlist.strings in Resources */,
 				CBAE8FE917C808F100912D16 /* Default.png in Resources */,
 				CBAE8FEB17C808F100912D16 /* Default@2x.png in Resources */,
 				CBAE8FED17C808F100912D16 /* Default-568h@2x.png in Resources */,
@@ -261,17 +257,6 @@
 			targetProxy = CBAE904317C81EFD00912D16 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		CBAE8FDF17C808F100912D16 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CBAE8FE017C808F100912D16 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		CBAE8FEE17C808F100912D16 /* Debug */ = {

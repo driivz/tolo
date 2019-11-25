@@ -31,8 +31,8 @@
 
 @interface TLSubscriber : NSObject
 
-@property (nonatomic) SEL selector;
-@property (nonatomic, weak) id target;
+@property (nonatomic, assign) SEL selector;
+@property (nonatomic, weak  ) id target;
 
 + (TLSubscriber *)subscriberWithObject:(id)subscriber selector:(SEL)selector;
 
@@ -57,6 +57,7 @@
                    includesParentSelectors:(BOOL)includes;
 
 @end
+
 @implementation NSObject (PubSub)
 
 - (NSDictionary *)tolo_selectorsWithPrefix:(NSString *)prefix
@@ -64,16 +65,16 @@
                    includesParentSelectors:(BOOL)includes {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     
-    int numberOfParams = hasParam ? 1 : 0;
-    static int INDEX_FIRST_PARAM = 2;
+    const NSUInteger kNumberOfParams = hasParam ? 1 : 0;
+    const NSUInteger kINDEX_FIRST_PARAM = 2;
     
-    u_int count;
+    u_int count = 0;
     
     Class objectClass = [self class];
     
     do {
         Method *methods = class_copyMethodList(objectClass, &count);
-        for (int i = 0; i < count ; ++i) {
+        for (NSUInteger i = 0; i < count ; ++i) {
             
             Method method = methods[i];
             
@@ -81,7 +82,7 @@
             NSMethodSignature *signature = [NSMethodSignature signatureWithObjCTypes:encoding];
             NSUInteger parameterCount = [signature numberOfArguments];
             
-            if (parameterCount - INDEX_FIRST_PARAM != numberOfParams) {
+            if (parameterCount - kINDEX_FIRST_PARAM != kNumberOfParams) {
                 continue;
             }
             
@@ -114,8 +115,8 @@
 
 @interface Tolo ()
 
-@property (atomic, strong) NSMutableDictionary *observers;
-@property (atomic, strong) NSMutableDictionary *publishers;
+@property (atomic, strong) NSMutableDictionary <NSString *, NSMutableArray <TLSubscriber *>*> *observers;
+@property (atomic, strong) NSMutableDictionary <NSString *, TLSubscriber *> *publishers;
 
 @end
 
@@ -139,22 +140,22 @@
     self.publisherPrefix = @"get";
     self.observerPrefix = @"on";
     
+    // establish any data sources first
+    self.publishers = [NSMutableDictionary dictionary];
+    
+    // register subscriptions
+    self.observers = [NSMutableDictionary dictionary];
+    
     return self;
 }
 
-- (void) subscribe:(NSObject *)object {
+- (void)subscribe:(NSObject *)object {
     [self subscribe:object withParentsSubscriptions:NO];
 }
 
-- (void) subscribe:(NSObject *)object withParentsSubscriptions:(BOOL)parentsSubscriptions {
+- (void)subscribe:(NSObject *)object withParentsSubscriptions:(BOOL)parentsSubscriptions {
     // Unsubscribe the `object` to prevent multiple-subscriptions
     [self unsubscribe:object];
-    
-    // establish any data sources first
-    
-    if (!self.publishers) {
-        self.publishers = [NSMutableDictionary dictionary];
-    }
     
     NSDictionary *publishingObjects = [object tolo_selectorsWithPrefix:self.publisherPrefix
                                                              withParam:NO
@@ -171,12 +172,6 @@
         }
     }
     
-    // register subscriptions
-    
-    if (!self.observers) {
-        self.observers = [NSMutableDictionary dictionary];
-    }
-    
     NSDictionary *observedObjects = [object tolo_selectorsWithPrefix:self.observerPrefix
                                                            withParam:YES
                                              includesParentSelectors:parentsSubscriptions];
@@ -190,26 +185,25 @@
             }
             
             SEL selector = NSSelectorFromString([observedObjects objectForKey:type]);
-            
             [observersForType addObject:[TLSubscriber subscriberWithObject:object selector:selector]];
             
             // publish this type to the subscriber on subscribe
-            TLSubscriber *pub = [self.publishers objectForKey:type];
-            if (pub) {
-                [object performSelector:selector withObject:[pub.target performSelector:pub.selector]];
+            TLSubscriber *publisher = [self.publishers objectForKey:type];
+            if (publisher) {
+                [object performSelector:selector withObject:[publisher.target performSelector:publisher.selector]];
             }
         }
     }
 }
 
-- (void) unsubscribe:(NSObject *)object {
+- (void)unsubscribe:(NSObject *)object {
     for (NSString *key in self.observers.allKeys) {
-        NSMutableArray *subscribers = [self.observers objectForKey:key];
-        for (TLSubscriber *subscriber in [NSArray arrayWithArray:subscribers]) {
-            if (!subscriber.target || subscriber.target == object) {
+        NSMutableArray <TLSubscriber *> *subscribers = [self.observers objectForKey:key];
+        [subscribers enumerateObjectsUsingBlock:^(TLSubscriber *subscriber, NSUInteger idx, BOOL *stop) {
+            if (!subscriber.target || [subscriber.target isEqual:object]) {
                 [subscribers removeObject:subscriber];
             }
-        }
+        }];
         
         if (!subscribers.count) {
             [self.observers removeObjectForKey:key];
@@ -217,27 +211,26 @@
     }
     
     for (NSString *key in self.publishers.allKeys) {
-        TLSubscriber *subscriber = (TLSubscriber *)[self.publishers objectForKey:key];
-        if (!subscriber.target || subscriber.target == object) {
+        TLSubscriber *subscriber = [self.publishers objectForKey:key];
+        if (!subscriber.target || [subscriber.target isEqual:object]) {
             [self.publishers removeObjectForKey:key];
         }
     }
 }
 
-- (void) publish:(id<NSObject>)type {
+- (void)publish:(id<NSObject>)type {
     if (self.forceMainThread && ![[NSThread currentThread] isEqual:[NSThread mainThread]]) {
         [self performSelectorOnMainThread:@selector(publish:) withObject:type waitUntilDone:YES];
     }
     else {
         NSString *thisType = NSStringFromClass([type class]);
         NSMutableArray *observers = [self.observers objectForKey:thisType];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"target == nil"];
+        NSArray *emptyTargets = [observers filteredArrayUsingPredicate:predicate];
+        [observers removeObjectsInArray:emptyTargets];
+        
         for (TLSubscriber *subscriber in [NSArray arrayWithArray:observers]) {
-            if (!subscriber.target) {
-                [observers removeObject:subscriber];
-            }
-            else {
-                [subscriber.target performSelector:subscriber.selector withObject:type];
-            }
+            [subscriber.target performSelector:subscriber.selector withObject:type];
         }
     }
 }

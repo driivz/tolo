@@ -27,6 +27,10 @@
     return self;
 }
 
+- (void)dealloc {
+    UNREGISTER();
+}
+
 PUBLISHER(EventProgressUpdated)
 {
     EventProgressUpdated *progress = [EventProgressUpdated new];

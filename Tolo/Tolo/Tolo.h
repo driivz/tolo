@@ -84,14 +84,14 @@
 @property (nonatomic, strong) NSString *publisherPrefix;
 @property (nonatomic, strong) NSString *observerPrefix;
 
-- (void) subscribe:(NSObject *)object;
-- (void) subscribe:(NSObject *)object withParentsSubscriptions:(BOOL)parentsSubscriptions;
-- (void) unsubscribe:(NSObject *)object;
-- (void) publish:(id<NSObject>)type;
+- (void)subscribe:(NSObject *)object;
+- (void)subscribe:(NSObject *)object withParentsSubscriptions:(BOOL)parentsSubscriptions;
+- (void)unsubscribe:(NSObject *)object;
+- (void)publish:(id<NSObject>)type;
 
 // This doesn't prevent you from creating as many instances as you like. This way, you have at least
 // one shared instance that you can use right off the bat.
-+ (Tolo *) sharedInstance;
++ (Tolo *)sharedInstance;
 
 @end
 

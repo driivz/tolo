@@ -36,6 +36,10 @@
     return self;
 }
 
+- (void)dealloc {
+    UNREGISTER();
+}
+
 SUBSCRIBE(EventProgressUpdated)
 {
     self.progressView.progress = event.progress;
