@@ -29,29 +29,39 @@
 #import "Tolo.h"
 #import <objc/runtime.h>
 
-@interface Subscriber : NSObject
+@interface TLSubscriber : NSObject
+
 @property (nonatomic) SEL selector;
 @property (nonatomic, weak) id target;
-+ (Subscriber *)subscriberWithObject:(id)subscriber selector:(SEL)selector;
+
++ (TLSubscriber *)subscriberWithObject:(id)subscriber selector:(SEL)selector;
+
 @end
-@implementation Subscriber
-+ (Subscriber *)subscriberWithObject:(id)target selector:(SEL)selector
-{
-    Subscriber *sub = [Subscriber new];
+
+@implementation TLSubscriber
+
++ (TLSubscriber *)subscriberWithObject:(id)target selector:(SEL)selector {
+    TLSubscriber *sub = [TLSubscriber new];
     sub.selector = selector;
     sub.target = target;
     
     return sub;
 }
+
 @end
 
 @interface NSObject (PubSub)
-- (NSDictionary *)tolo_selectorsWithPrefix:(NSString *)prefix withParam:(BOOL)hasParam includesParentSelectors:(BOOL)includes;
+
+- (NSDictionary *)tolo_selectorsWithPrefix:(NSString *)prefix
+                                 withParam:(BOOL)hasParam
+                   includesParentSelectors:(BOOL)includes;
+
 @end
 @implementation NSObject (PubSub)
 
-- (NSDictionary *)tolo_selectorsWithPrefix:(NSString *)prefix withParam:(BOOL)hasParam includesParentSelectors:(BOOL)includes;
-{
+- (NSDictionary *)tolo_selectorsWithPrefix:(NSString *)prefix
+                                 withParam:(BOOL)hasParam
+                   includesParentSelectors:(BOOL)includes {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     
     int numberOfParams = hasParam ? 1 : 0;
@@ -62,48 +72,51 @@
     Class objectClass = [self class];
     
     do {
-        Method* methods = class_copyMethodList(objectClass, &count);
-        for (int i = 0; i < count ; i++) {
-
+        Method *methods = class_copyMethodList(objectClass, &count);
+        for (int i = 0; i < count ; ++i) {
+            
             Method method = methods[i];
-
+            
             const char *encoding = method_getTypeEncoding(method);
             NSMethodSignature *signature = [NSMethodSignature signatureWithObjCTypes:encoding];
             NSUInteger parameterCount = [signature numberOfArguments];
-
+            
             if (parameterCount - INDEX_FIRST_PARAM != numberOfParams) {
                 continue;
             }
-
+            
             SEL selector = method_getName(method);
-            const char* methodName = sel_getName(selector);
+            const char *methodName = sel_getName(selector);
             NSString *methodNameString = [NSString stringWithCString:methodName encoding:NSUTF8StringEncoding];
-
+            
             if (![methodNameString hasPrefix:prefix]) {
                 continue;
             }
-
+            
             NSRange range = {prefix.length, methodNameString.length - prefix.length - (hasParam?1:0)};
-
+            
             NSString *paramTypeNameString = [methodNameString substringWithRange:range];
-
+            
             [result setObject:methodNameString forKey:paramTypeNameString];
-
+            
         }
         free(methods);
-
+        
         objectClass = [objectClass superclass];
     } while (includes &&
              [objectClass isSubclassOfClass:[NSObject class]] &&
              objectClass != [NSObject class]);
-
+    
     return result;
 }
+
 @end
 
 @interface Tolo ()
+
 @property (atomic, strong) NSMutableDictionary *observers;
 @property (atomic, strong) NSMutableDictionary *publishers;
+
 @end
 
 @implementation Tolo
@@ -114,11 +127,12 @@
     dispatch_once(&pred, ^{
         shared = [[Tolo alloc] init];
     });
+    
     return shared;
 }
 
-- (id)init
-{
+
+- (instancetype)init {
     self = [super init];
     
     self.forceMainThread = YES;
@@ -128,13 +142,11 @@
     return self;
 }
 
-- (void) subscribe:(NSObject *)object
-{
+- (void) subscribe:(NSObject *)object {
     [self subscribe:object withParentsSubscriptions:NO];
 }
 
-- (void) subscribe:(NSObject *)object withParentsSubscriptions:(BOOL)parentsSubscriptions
-{
+- (void) subscribe:(NSObject *)object withParentsSubscriptions:(BOOL)parentsSubscriptions {
     // Unsubscribe the `object` to prevent multiple-subscriptions
     [self unsubscribe:object];
     
@@ -144,15 +156,15 @@
         self.publishers = [NSMutableDictionary dictionary];
     }
     
-    NSDictionary *publishingObjects = [object tolo_selectorsWithPrefix:self.publisherPrefix withParam:NO includesParentSelectors:parentsSubscriptions];
+    NSDictionary *publishingObjects = [object tolo_selectorsWithPrefix:self.publisherPrefix
+                                                             withParam:NO
+                                               includesParentSelectors:parentsSubscriptions];
     
     if (publishingObjects.count) {
-        
-        for (NSString* type in publishingObjects) {
-            
+        for (NSString *type in publishingObjects) {
             SEL selector = NSSelectorFromString([publishingObjects objectForKey:type]);
             
-            [self.publishers setObject:[Subscriber subscriberWithObject:object selector:selector]
+            [self.publishers setObject:[TLSubscriber subscriberWithObject:object selector:selector]
                                 forKey:type];
             // publish to existing subscribers
             [self publish:[object performSelector:selector]];
@@ -164,14 +176,14 @@
     if (!self.observers) {
         self.observers = [NSMutableDictionary dictionary];
     }
-    NSDictionary *observedObjects = [object tolo_selectorsWithPrefix:self.observerPrefix withParam:YES includesParentSelectors:parentsSubscriptions];
+    
+    NSDictionary *observedObjects = [object tolo_selectorsWithPrefix:self.observerPrefix
+                                                           withParam:YES
+                                             includesParentSelectors:parentsSubscriptions];
     
     if (observedObjects.count) {
-        
-        for (NSString* type in observedObjects) {
-            
+        for (NSString *type in observedObjects) {
             NSMutableArray *observersForType = [self.observers objectForKey:type];
-            
             if (!observersForType) {
                 observersForType = [NSMutableArray array];
                 [self.observers setObject:observersForType forKey:type];
@@ -179,10 +191,10 @@
             
             SEL selector = NSSelectorFromString([observedObjects objectForKey:type]);
             
-            [observersForType addObject:[Subscriber subscriberWithObject:object selector:selector]];
+            [observersForType addObject:[TLSubscriber subscriberWithObject:object selector:selector]];
             
             // publish this type to the subscriber on subscribe
-            Subscriber *pub = [self.publishers objectForKey:type];
+            TLSubscriber *pub = [self.publishers objectForKey:type];
             if (pub) {
                 [object performSelector:selector withObject:[pub.target performSelector:pub.selector]];
             }
@@ -190,13 +202,10 @@
     }
 }
 
-- (void) unsubscribe:(NSObject *)object
-{
+- (void) unsubscribe:(NSObject *)object {
     for (NSString *key in self.observers.allKeys) {
-        
         NSMutableArray *subscribers = [self.observers objectForKey:key];
-        
-        for (Subscriber *subscriber in [NSArray arrayWithArray:subscribers]) {
+        for (TLSubscriber *subscriber in [NSArray arrayWithArray:subscribers]) {
             if (!subscriber.target || subscriber.target == object) {
                 [subscribers removeObject:subscriber];
             }
@@ -208,33 +217,25 @@
     }
     
     for (NSString *key in self.publishers.allKeys) {
-        
-        Subscriber *subscriber = (Subscriber *)[self.publishers objectForKey:key];
-        
+        TLSubscriber *subscriber = (TLSubscriber *)[self.publishers objectForKey:key];
         if (!subscriber.target || subscriber.target == object) {
             [self.publishers removeObjectForKey:key];
         }
     }
 }
 
-- (void) publish:(id<NSObject>)type
-{
+- (void) publish:(id<NSObject>)type {
     if (self.forceMainThread && ![[NSThread currentThread] isEqual:[NSThread mainThread]]) {
-        
         [self performSelectorOnMainThread:@selector(publish:) withObject:type waitUntilDone:YES];
-        
-    } else {
-        
+    }
+    else {
         NSString *thisType = NSStringFromClass([type class]);
-        
         NSMutableArray *observers = [self.observers objectForKey:thisType];
-        
-        for (Subscriber *subscriber in [NSArray arrayWithArray:observers]) {
-            
+        for (TLSubscriber *subscriber in [NSArray arrayWithArray:observers]) {
             if (!subscriber.target) {
                 [observers removeObject:subscriber];
-            
-            } else {
+            }
+            else {
                 [subscriber.target performSelector:subscriber.selector withObject:type];
             }
         }
