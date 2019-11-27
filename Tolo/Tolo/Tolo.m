@@ -198,7 +198,7 @@
 
 - (void)unsubscribe:(NSObject *)object {
     for (NSString *key in self.observers.allKeys) {
-        NSMutableArray <TLSubscriber *> *subscribers = [self.observers objectForKey:key];
+        NSMutableArray <TLSubscriber *> *subscribers = [[self.observers objectForKey:key] mutableCopy];
         [subscribers enumerateObjectsUsingBlock:^(TLSubscriber *subscriber, NSUInteger idx, BOOL *stop) {
             if (!subscriber.target || [subscriber.target isEqual:object]) {
                 [subscribers removeObject:subscriber];
@@ -207,6 +207,9 @@
         
         if (!subscribers.count) {
             [self.observers removeObjectForKey:key];
+        }
+        else {
+            [self.observers setObject:subscribers forKey:key];
         }
     }
     
